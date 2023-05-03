@@ -4,6 +4,9 @@ import org.springframework.beans.factory.annotation.*;
 import org.springframework.stereotype.*;
 import org.springframework.ui.*;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.*;
+
 import org.slf4j.*;
 import com.example.model.*;
 import com.example.services.*;
@@ -36,6 +39,22 @@ public class ProductoController {
 		Usuario u = new Usuario(1,"","","","","","","");
 		producto.setUsuario(u);
 		productoService.guardar(producto);
+		return"redirect:/productos";
+	}
+	
+	@GetMapping("/edit/{id}")
+	public String editar(@PathVariable Integer id, Model model) {
+		Producto producto= new Producto();
+		Optional<Producto> optionalProducto=productoService.get(id);
+		producto=optionalProducto.get();
+		LOGGER.info("Producto buscado: {}",producto);
+		model.addAttribute("producto", producto);
+		return "productos/edit";
+	}
+	
+	@PostMapping("/update")
+	public String update(Producto producto) {
+		productoService.actualizar(producto);
 		return"redirect:/productos";
 	}
 	
