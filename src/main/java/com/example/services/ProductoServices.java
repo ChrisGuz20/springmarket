@@ -8,4 +8,5 @@ public interface ProductoServices {
 	public Optional<Producto> get(Integer id);
 	public void actualizar(Producto producto);
 	public void eliminar(Integer id);
+	public List<Producto> findAll();
 }

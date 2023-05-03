@@ -1,5 +1,6 @@
 package com.example.services;
 
+import java.util.List;
 import java.util.Optional;
 import org.springframework.stereotype.*;
 import org.springframework.beans.factory.annotation.*;
@@ -32,5 +33,12 @@ public class ProductoServicesImpl implements ProductoServices{
 	public void eliminar(Integer id) {
 		productodao.deleteById(id);
 	}
+
+	@Override
+	public List<Producto> findAll() {
+		return productodao.findAll();
+	}
+	
+	
 
 }

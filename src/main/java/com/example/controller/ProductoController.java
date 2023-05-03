@@ -2,6 +2,7 @@ package com.example.controller;
 
 import org.springframework.beans.factory.annotation.*;
 import org.springframework.stereotype.*;
+import org.springframework.ui.*;
 import org.springframework.web.bind.annotation.*;
 import org.slf4j.*;
 import com.example.model.*;
@@ -19,7 +20,8 @@ public class ProductoController {
 	
 	
 	@GetMapping("")
-	public String mostrar() {
+	public String mostrar(Model model) {
+		model.addAttribute("productos", productoService.findAll());
 		return"productos/show";
 	}
 	
