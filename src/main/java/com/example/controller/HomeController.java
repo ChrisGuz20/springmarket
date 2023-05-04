@@ -19,6 +19,9 @@ public class HomeController {
 
 	@Autowired
 	private ProductoServices productoservice;
+	
+	@Autowired
+	private IUserService usuarioService;
 
 	// almacenar detalles de orden de compra
 	List<DetalleOrden> detalles = new ArrayList<DetalleOrden>();
@@ -115,7 +118,13 @@ public class HomeController {
 	
 	//ver la orden de compra
 	@GetMapping("/order")
-	public String order() {
+	public String order(Model model) {
+		
+		Usuario usuario= usuarioService.findById(1).get();
+		
+		model.addAttribute("cart", detalles);
+		model.addAttribute("orden", orden);
+		model.addAttribute("usuario", usuario);
 		
 		return "/usuarios/resumenorden";
 	}
