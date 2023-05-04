@@ -5,7 +5,7 @@ import org.springframework.stereotype.*;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Optional;
+import java.util.*;
 
 import org.slf4j.*;
 import com.example.services.*;
@@ -20,6 +20,12 @@ public class HomeController {
 	
 	@Autowired
 	private ProductoServices productoservice;
+	
+	//almacenar detalles de orden de compra
+	List<DetalleOrden> detalles = new ArrayList<DetalleOrden>();
+	
+	//datos de la orden de compra
+	Orden orden= new Orden();
 	
 	@GetMapping("")
 	public String inicio(Model model) {
@@ -38,7 +44,13 @@ public class HomeController {
 	}
 	
 	@PostMapping("/cart")
-	public String addcarrito() {
+	public String addcarrito(@RequestParam Integer id, @RequestParam Integer cantidad) {
+		DetalleOrden detalleorden = new DetalleOrden();
+		Producto producto = new Producto();
+		double sumatotal = 0;
+		Optional<Producto> optionalproducto = productoservice.get(id);
+		log.info("Producto añadido: {}", optionalproducto.get());
+		log.info("Cantidad: {}",cantidad);
 		return "usuarios/carrito";
 	}
 }
