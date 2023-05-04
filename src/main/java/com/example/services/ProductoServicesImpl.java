@@ -5,14 +5,14 @@ import java.util.Optional;
 import org.springframework.stereotype.*;
 import org.springframework.beans.factory.annotation.*;
 import com.example.model.Producto;
-import com.example.repository.ProductoDAO;
+import com.example.repository.IProductoDAO;
 
 //Metodos crud
 @Service
 public class ProductoServicesImpl implements ProductoServices{
 
 	@Autowired
-	private ProductoDAO productodao;
+	private IProductoDAO productodao;
 	
 	@Override
 	public Producto guardar(Producto producto) {
