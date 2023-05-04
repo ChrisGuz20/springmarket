@@ -36,4 +36,9 @@ public class HomeController {
 		model.addAttribute("producto", producto);
 		return "usuarios/productohome";
 	}
+	
+	@PostMapping("/cart")
+	public String addcarrito() {
+		return "usuarios/carrito";
+	}
 }
