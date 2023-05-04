@@ -6,6 +6,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 import org.slf4j.*;
 import com.example.services.*;
@@ -19,13 +20,13 @@ public class HomeController {
 
 	@Autowired
 	private ProductoServices productoservice;
-	
+
 	@Autowired
 	private IUserService usuarioService;
-	
+
 	@Autowired
 	private IOrdenService ordenservice;
-	
+
 	@Autowired
 	private IDetailOrdenService detalleordenservice;
 
@@ -68,15 +69,15 @@ public class HomeController {
 		detalleorden.setNombre(producto.getNombre());
 		detalleorden.setTotal(producto.getPrecio() * cantidad);
 		detalleorden.setProducto(producto);
-		
-		//validar que el producto no se agregue 2 veces al carrito
-		Integer idProd=producto.getId();
-		boolean ingresado=detalles.stream().anyMatch(p -> p.getProducto().getId()==idProd);
-		
-		if(!ingresado) {
+
+		// validar que el producto no se agregue 2 veces al carrito
+		Integer idProd = producto.getId();
+		boolean ingresado = detalles.stream().anyMatch(p -> p.getProducto().getId() == idProd);
+
+		if (!ingresado) {
 			detalles.add(detalleorden);
 		}
-		
+
 		sumatotal = detalles.stream().mapToDouble(dt -> dt.getTotal()).sum();
 
 		orden.setTotal(sumatotal);
@@ -111,54 +112,64 @@ public class HomeController {
 
 		return "usuarios/carrito";
 	}
-	
+
 	// mostrar carrito desde cualquier seccion
 	@GetMapping("/getcart")
 	public String getcart(Model model) {
-		
+
 		model.addAttribute("cart", detalles);
 		model.addAttribute("orden", orden);
-		
+
 		return "usuarios/carrito";
 	}
-	
-	//ver la orden de compra
+
+	// ver la orden de compra
 	@GetMapping("/order")
 	public String order(Model model) {
-		
-		Usuario usuario= usuarioService.findById(1).get();
-		
+
+		Usuario usuario = usuarioService.findById(1).get();
+
 		model.addAttribute("cart", detalles);
 		model.addAttribute("orden", orden);
 		model.addAttribute("usuario", usuario);
-		
+
 		return "/usuarios/resumenorden";
 	}
-	
+
 	// guardar la orden
 	@GetMapping("/saveorder")
 	public String generarOrder() {
 		Date fechaCreacion = new Date();
 		orden.setFechaCreacion(fechaCreacion);
 		orden.setNumero(ordenservice.generarnumorden());
-		
-		//usuario
-		Usuario usuario= usuarioService.findById(1).get();
-		
+
+		// usuario
+		Usuario usuario = usuarioService.findById(1).get();
+
 		orden.setUsuario(usuario);
 		ordenservice.save(orden);
-		
-		//guardar detalles
-		for(DetalleOrden dt:detalles) {
+
+		// guardar detalles
+		for (DetalleOrden dt : detalles) {
 			dt.setOrden(orden);
 			detalleordenservice.save(dt);
 		}
-		
-		//limpiar orden
+
+		// limpiar orden
 		orden = new Orden();
 		detalles.clear();
-		
+
 		return "redirect:/";
 	}
-	
+
+	@PostMapping("/search")
+	public String buscarPrd(@RequestParam String nomprod, Model model) {
+		log.info("Nombre del producto: {}", nomprod);
+		// funcion lamda
+		List<Producto> productos = productoservice.findAll().stream().filter(p -> p.getNombre().contains(nomprod))
+				.collect(Collectors.toList());
+		model.addAttribute("productos",productos);
+		return "usuarios/home";
+	}
+
 }
