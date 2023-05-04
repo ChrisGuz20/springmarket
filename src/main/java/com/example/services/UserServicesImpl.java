@@ -24,5 +24,10 @@ public class UserServicesImpl  implements IUserService{
 		return userdao.save(usuario);
 	}
 
+	@Override
+	public Optional<Usuario> findByEmail(String email) {
+		return userdao.findByEmail(email);
+	}
+
 
 }
