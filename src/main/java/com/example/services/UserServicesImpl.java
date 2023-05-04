@@ -19,5 +19,10 @@ public class UserServicesImpl  implements IUserService{
 		return userdao.findById(id);
 	}
 
+	@Override
+	public Usuario save(Usuario usuario) {
+		return userdao.save(usuario);
+	}
+
 
 }

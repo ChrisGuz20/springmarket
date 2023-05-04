@@ -6,5 +6,5 @@ import com.example.model.*;
 
 public interface IUserService {
 	Optional<Usuario> findById(Integer id);
-	
+	Usuario save(Usuario usuario);
 }
