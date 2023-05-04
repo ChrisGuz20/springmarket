@@ -22,6 +22,12 @@ public class HomeController {
 	
 	@Autowired
 	private IUserService usuarioService;
+	
+	@Autowired
+	private IOrdenService ordenservice;
+	
+	@Autowired
+	private IDetailOrdenService detalleordenservice;
 
 	// almacenar detalles de orden de compra
 	List<DetalleOrden> detalles = new ArrayList<DetalleOrden>();
@@ -127,6 +133,32 @@ public class HomeController {
 		model.addAttribute("usuario", usuario);
 		
 		return "/usuarios/resumenorden";
+	}
+	
+	// guardar la orden
+	@GetMapping("/saveorder")
+	public String generarOrder() {
+		Date fechaCreacion = new Date();
+		orden.setFechaCreacion(fechaCreacion);
+		orden.setNumero(ordenservice.generarnumorden());
+		
+		//usuario
+		Usuario usuario= usuarioService.findById(1).get();
+		
+		orden.setUsuario(usuario);
+		ordenservice.save(orden);
+		
+		//guardar detalles
+		for(DetalleOrden dt:detalles) {
+			dt.setOrden(orden);
+			detalleordenservice.save(dt);
+		}
+		
+		//limpiar orden
+		orden = new Orden();
+		detalles.clear();
+		
+		return "redirect:/";
 	}
 	
 }
