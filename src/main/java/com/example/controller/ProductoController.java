@@ -4,7 +4,9 @@ import org.springframework.beans.factory.annotation.*;
 import org.springframework.stereotype.*;
 import org.springframework.ui.*;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.*;
 
 import org.slf4j.*;
@@ -21,6 +23,9 @@ public class ProductoController {
 	@Autowired
 	private ProductoServices productoService;
 	
+	@Autowired
+	private UploadFileService upload;
+	
 	
 	@GetMapping("")
 	public String mostrar(Model model) {
@@ -34,10 +39,26 @@ public class ProductoController {
 	}
 	
 	@PostMapping("/save")
-	public String guardar(Producto producto) {
+	public String guardar(Producto producto, @RequestParam("img") MultipartFile file) throws IOException {
 		LOGGER.info("Este es el objeto producto {}",producto);
 		Usuario u = new Usuario(1,"","","","","","","");
 		producto.setUsuario(u);
+		
+		//imagen
+		if(producto.getId()==null) {//Cuando se crea un producto
+			String nombreImagen=upload.saveImage(file);
+			producto.setImagen(nombreImagen);
+		}else {
+			if(file.isEmpty()) { //cuando editamos el producto pero no se cambia la imagen
+				Producto prod= new Producto();
+				prod=productoService.get(producto.getId()).get();
+				producto.setImagen(prod.getImagen());
+			}else { //editamos el producto y se cambia la imagen
+				String nombreImagen=upload.saveImage(file);
+				producto.setImagen(nombreImagen);
+			}
+		}
+		
 		productoService.guardar(producto);
 		return"redirect:/productos";
 	}
