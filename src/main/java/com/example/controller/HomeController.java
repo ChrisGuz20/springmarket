@@ -103,7 +103,7 @@ public class HomeController {
 		return "usuarios/carrito";
 	}
 	
-	//
+	// mostrar carrito desde cualquier seccion
 	@GetMapping("/getcart")
 	public String getcart(Model model) {
 		
@@ -112,4 +112,12 @@ public class HomeController {
 		
 		return "usuarios/carrito";
 	}
+	
+	//ver la orden de compra
+	@GetMapping("/order")
+	public String order() {
+		
+		return "/usuarios/resumenorden";
+	}
+	
 }
