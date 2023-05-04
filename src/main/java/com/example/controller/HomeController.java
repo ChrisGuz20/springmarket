@@ -4,8 +4,13 @@ import org.springframework.beans.factory.annotation.*;
 import org.springframework.stereotype.*;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Optional;
+
 import org.slf4j.*;
 import com.example.services.*;
+import com.example.model.*;
+
 
 @Controller
 @RequestMapping("/")
@@ -23,9 +28,12 @@ public class HomeController {
 	}
 	
 	@GetMapping("productohome/{id}")
-	public String productoHome(@PathVariable Integer id) {
+	public String productoHome(@PathVariable Integer id, Model model) {
 		log.info("Id del producto enviado como parametro {}",id);
-		
+		Producto producto =new Producto();
+		Optional<Producto> productoOptional=productoservice.get(id);
+		producto=productoOptional.get();
+		model.addAttribute("producto", producto);
 		return "usuarios/productohome";
 	}
 }
