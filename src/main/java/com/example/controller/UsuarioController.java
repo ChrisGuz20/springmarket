@@ -15,40 +15,40 @@ import com.example.services.*;
 
 @Controller
 @RequestMapping("/usuario")
-public class UserController {
+public class UsuarioController {
 	
-	private final Logger logger = LoggerFactory.getLogger(UserController.class);
+	private final Logger logger = LoggerFactory.getLogger(UsuarioController.class);
 	
 	@Autowired
-	private IUserService usuarioservice;
+	private IUsuarioService usuarioService;
 	
 	
 	//registro de usuarios
 	@GetMapping("/registro")
-	public String crearU() {
-		return "usuarios/registro";
+	public String create() {
+		return "usuario/registro";
 	}
 	
-	@PostMapping("/guardar")
-	public String guardarU(Usuario usuario) {
+	@PostMapping("/save")
+	public String save(Usuario usuario) {
 		logger.info("Usuario registro: {}", usuario);
 		usuario.setTipo("USER");
-		usuarioservice.save(usuario);
+		usuarioService.save(usuario);
 		return "redirect:/";
 	}
 	
 	@GetMapping("/login")
 	public String login() {
-		return "usuarios/login";
+		return "usuario/login";
 	}
 	
-	@PostMapping("/access")
+	@PostMapping("/acceder")
 	public String acceder(Usuario usuario, HttpSession session) {
 		logger.info("Accesos: {}",usuario);
-		Optional<Usuario> user=usuarioservice.findByEmail(usuario.getEmail());
+		Optional<Usuario> user=usuarioService.findByEmail(usuario.getEmail());
 		//logger.info("Usuario de db: {}", user.get());
 		if(user.isPresent()) {
-			session.setAttribute("iduser", user.get().getId());
+			session.setAttribute("idusuario", user.get().getId());
 			if(user.get().getTipo().equals("ADMIN")) {
 				return "redirect:/administrador";
 			}else {

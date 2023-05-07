@@ -7,6 +7,8 @@ import org.springframework.stereotype.*;
 import com.example.model.*;
 
 @Repository
-public interface IUserDAO extends JpaRepository<Usuario,Integer>{
+public interface IUsuarioRepository extends JpaRepository<Usuario,Integer>{
+	Optional<Usuario> findById(Integer id);
+
 	Optional<Usuario> findByEmail(String email);
 }

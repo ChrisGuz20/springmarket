@@ -23,7 +23,7 @@
 <body>
 
 	<!-- Navigation -->
-	<div th:include="usuarios/template_usuario.html::header"></div>
+	<div th:include="usuario/template_usuario.html::header"></div>
 	<!-- Page Content -->
 	<div class="container">
 
@@ -87,7 +87,7 @@
 							<li class="list-group-item">
 								<h5 th:text="'Total: '+${orden.total}"></h5>
 							</li>
-							<a th:href="@{/saveorder}" class="btn btn-dark">Generar</a>
+							<a th:href="@{saveOrder}" class="btn btn-dark">Generar</a>
 						</ul>
 					</div>
 				</div>
@@ -96,7 +96,7 @@
 		<!-- /.container -->
 
 		<!-- Footer -->
-		<div th:include="usuarios/template_usuario.html::footer"></div>
+		<div th:include="usuario/template_usuario.html::footer"></div>
 
 		<!-- Bootstrap core JavaScript -->
 		<script th:src="@{/vendor/jquery/jquery.min.js}"></script>

@@ -15,11 +15,11 @@ import com.example.services.*;
 public class AdministradorController {
 	
 	@Autowired
-	private ProductoServices productoservice;
+	private ProductoService productoService;
 	
 	@GetMapping("")
 	public String home(Model model) {
-		List<Producto> productos= productoservice.findAll();
+		List<Producto> productos= productoService.findAll();
 		model.addAttribute("productos",productos);
 		return "administrador/home";
 	}

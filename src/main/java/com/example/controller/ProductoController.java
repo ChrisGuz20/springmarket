@@ -6,22 +6,33 @@ import org.springframework.ui.*;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.example.model.Producto;
+import com.example.model.Usuario;
+import com.example.services.IUsuarioService;
+import com.example.services.ProductoService;
+import com.example.services.UploadFileService;
+
 import java.io.IOException;
 import java.util.*;
 
+import javax.servlet.http.HttpSession;
+
 import org.slf4j.*;
-import com.example.model.*;
-import com.example.services.*;
 
 
 @Controller
 @RequestMapping("/productos")
 public class ProductoController {
 	
+	Integer Idusuarios;
+	
 	private final Logger LOGGER = LoggerFactory.getLogger(ProductoController.class);
 	
 	@Autowired
-	private ProductoServices productoService;
+	private ProductoService productoService;
+	
+	@Autowired
+	private IUsuarioService usuarioService;
 	
 	@Autowired
 	private UploadFileService upload;
@@ -34,14 +45,18 @@ public class ProductoController {
 	}
 	
 	@GetMapping("/create")
-	public String crear() {
+	public String create() {
 		return"productos/create";
 	}
 	
 	@PostMapping("/save")
-	public String guardar(Producto producto, @RequestParam("img") MultipartFile file) throws IOException {
+	public String save(Producto producto, @RequestParam("img") MultipartFile file, HttpSession session) throws IOException {
+		Idusuarios= (Integer) session.getAttribute("idusuario");
+		
 		LOGGER.info("Este es el objeto producto {}",producto);
-		Usuario u = new Usuario(1,"","","","","","","");
+		//Usuario u= usuarioService.findById(Integer.parseInt(session.getAttribute("idusuario").toString() )).get();
+		//Usuario u= new Usuario (1,"","","","","","","");
+		Usuario u= usuarioService.findById(Idusuarios).get();
 		producto.setUsuario(u);
 		
 		//imagen
@@ -52,12 +67,12 @@ public class ProductoController {
 			
 		}
 		
-		productoService.guardar(producto);
+		productoService.save(producto);
 		return"redirect:/productos";
 	}
 	
 	@GetMapping("/edit/{id}")
-	public String editar(@PathVariable Integer id, Model model) {
+	public String edit(@PathVariable Integer id, Model model) {
 		Producto producto= new Producto();
 		Optional<Producto> optionalProducto=productoService.get(id);
 		producto=optionalProducto.get();
@@ -84,7 +99,7 @@ public class ProductoController {
 			producto.setImagen(nombreImagen);
 		}
 		producto.setUsuario(prod.getUsuario());
-		productoService.actualizar(producto);
+		productoService.update(producto);
 		return"redirect:/productos";
 	}
 	
@@ -98,7 +113,7 @@ public class ProductoController {
 		if(!prod.getImagen().equals("default.jpg")) {
 			upload.deleteImage(prod.getImagen());
 		}
-		productoService.eliminar(id);
+		productoService.delete(id);
 		return "redirect:/productos";
 	}
 }

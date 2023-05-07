@@ -8,12 +8,12 @@ import java.io.File;
 
 @Service
 public class UploadFileService {
-	private String carpeta="images//";
+	private String folder="images//";
 	
 	public String saveImage(MultipartFile file) throws IOException {
 		if(!file.isEmpty()) {
 			byte[] bytes=file.getBytes();
-			Path path= Paths.get(carpeta+file.getOriginalFilename());
+			Path path= Paths.get(folder+file.getOriginalFilename());
 			Files.write(path, bytes);
 			return file.getOriginalFilename();
 		}

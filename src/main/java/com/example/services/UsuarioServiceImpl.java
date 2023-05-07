@@ -1,5 +1,6 @@
 package com.example.services;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.*;
@@ -9,25 +10,27 @@ import com.example.repository.*;
 import com.example.model.*;
 
 @Service
-public class UserServicesImpl  implements IUserService{
+public class UsuarioServiceImpl  implements IUsuarioService{
 
 	@Autowired
-	private IUserDAO userdao;
+	private IUsuarioRepository usuarioRepository;
 
 	@Override
 	public Optional<Usuario> findById(Integer id) {
-		return userdao.findById(id);
+		return usuarioRepository.findById(id);
 	}
 
 	@Override
 	public Usuario save(Usuario usuario) {
-		return userdao.save(usuario);
+		return usuarioRepository.save(usuario);
 	}
 
 	@Override
 	public Optional<Usuario> findByEmail(String email) {
-		return userdao.findByEmail(email);
+		return usuarioRepository.findByEmail(email);
 	}
+
+	
 
 
 }
