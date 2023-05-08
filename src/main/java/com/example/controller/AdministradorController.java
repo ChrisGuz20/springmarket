@@ -1,8 +1,8 @@
 package com.example.controller;
 
 import java.util.List;
+import java.util.Optional;
 
-import org.hibernate.annotations.common.util.impl.LoggerFactory;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.*;
 import org.springframework.stereotype.*;
@@ -32,6 +32,16 @@ public class AdministradorController {
 		List<Producto> productos= productoService.findAll();
 		model.addAttribute("productos",productos);
 		return "administrador/home";
+	}
+	
+	@GetMapping("productohomeadmin/{id}")
+	public String productoHome(@PathVariable Integer id, Model model) {
+		logg.info("Id del producto enviado como parametro {}", id);
+		Producto producto = new Producto();
+		Optional<Producto> productoOptional = productoService.get(id);
+		producto = productoOptional.get();
+		model.addAttribute("producto", producto);
+		return "administrador/productohomeadmin";
 	}
 	
 	@GetMapping("/usuarios")
