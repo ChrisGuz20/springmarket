@@ -18,11 +18,15 @@ import com.example.services.*;
 @RequestMapping("/usuario")
 public class UsuarioController {
 	
+	Integer Idusuarios;
+	
 	private final Logger logger = LoggerFactory.getLogger(UsuarioController.class);
 	
 	@Autowired
 	private IUsuarioService usuarioService;
 	
+	@Autowired
+	private IOrdenService ordenService;
 	
 	//registro de usuarios
 	@GetMapping("/registro")
@@ -64,7 +68,11 @@ public class UsuarioController {
 	
 	@GetMapping("/compras")
 	public String obtenerCompras(HttpSession session, Model model) {
+		Idusuarios= (Integer) session.getAttribute("idusuario");
 		model.addAttribute("sesion", session.getAttribute("idusuario"));
+		Usuario usuario = usuarioService.findById(Idusuarios).get();
+		List<Orden>ordenes = ordenService.findByUsuario(usuario);
+		model.addAttribute("ordenes",ordenes);
 		return "usuario/compras";
 	}
 }
