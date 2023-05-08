@@ -3,6 +3,7 @@ package com.example.controller;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.*;
 import org.springframework.stereotype.*;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import java.util.*;
 
@@ -59,5 +60,11 @@ public class UsuarioController {
 		}
 		
 		return "redirect:/";
+	}
+	
+	@GetMapping("/compras")
+	public String obtenerCompras(HttpSession session, Model model) {
+		model.addAttribute("sesion", session.getAttribute("idusuario"));
+		return "usuario/compras";
 	}
 }
