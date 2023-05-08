@@ -30,6 +30,11 @@ public class UsuarioServiceImpl  implements IUsuarioService{
 		return usuarioRepository.findByEmail(email);
 	}
 
+	@Override
+	public List<Usuario> findAll() {
+		return usuarioRepository.findAll();
+	}
+
 	
 
 
