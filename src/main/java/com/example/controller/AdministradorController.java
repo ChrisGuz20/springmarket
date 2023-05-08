@@ -2,6 +2,8 @@ package com.example.controller;
 
 import java.util.List;
 
+import org.hibernate.annotations.common.util.impl.LoggerFactory;
+import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.*;
 import org.springframework.stereotype.*;
 import org.springframework.ui.*;
@@ -23,6 +25,8 @@ public class AdministradorController {
 	@Autowired
 	private IOrdenService ordenService;
 	
+	private Logger logg= org.slf4j.LoggerFactory.getLogger(AdministradorController.class);
+	
 	@GetMapping("")
 	public String home(Model model) {
 		List<Producto> productos= productoService.findAll();
@@ -41,5 +45,14 @@ public class AdministradorController {
 		model.addAttribute("usuarios", usuarioService.findAll());
 		model.addAttribute("ordenes", ordenService.findAll());
 		return "administrador/ordenes";
+	}
+	
+	@GetMapping("/detalle/{id}")
+	public String detalle(Model model,@PathVariable Integer id) {
+		logg.info("Id de la orden: {}",id);
+		Orden orden= ordenService.findById(id).get();
+		model.addAttribute("detalles", orden.getDetalle());
+		//model.addAttribute("ordenes", ordenService.findAll());
+		return "administrador/detalleorden";
 	}
 }
